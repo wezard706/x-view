@@ -27,14 +27,14 @@ export default function SignUp() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState([]);
   const [success, setSuccess] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (password !== passwordConfirmation) {
-      setError('パスワードが一致しません。');
+      setErrors(['パスワードが一致しません。']);
       return;
     }
 
@@ -58,17 +58,18 @@ export default function SignUp() {
 
       if (response.ok) {
         setSuccess('サインアップが成功しました！');
-        setError('');
+        setErrors([]);
         setEmail('');
         setUsername('');
         setPassword('');
         setPasswordConfirmation('');
       } else {
         const data = await response.json();
-        setError(data.message || 'サインアップに失敗しました。');
+        const errors = [].concat(data.errors);
+        setErrors(errors || ['サインアップに失敗しました。']);
       }
     } catch (err) {
-      setError('サインアップ中にエラーが発生しました。');
+      setErrors(['サインアップ中にエラーが発生しました。']);
     }
   };
 
@@ -76,7 +77,13 @@ export default function SignUp() {
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
         <h1 className="text-2xl font-bold mb-6 text-center">サインアップ</h1>
-        {error && <p className="text-red-500 mb-4">{error}</p>}
+        {errors.length > 0 && (
+          <div className="error-messages">
+            {errors.map((error, index) => (
+              <p className="text-red-500 mb-4" key={index}>{error}</p>
+            ))}
+          </div>
+        )}
         {success && <p className="text-green-500 mb-4">{success}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
