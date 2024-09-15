@@ -80,7 +80,7 @@ export default function SignUp() {
         {errors.length > 0 && (
           <div className="error-messages">
             {errors.map((error, index) => (
-              <p className="text-red-500 mb-4" key={index}>{error}</p>
+              <p className="text-red-500 mb-4" key={index}>{error.message}</p>
             ))}
           </div>
         )}
