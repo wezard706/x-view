@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 function toSnakeCase(str) {
   return str.replace(/([A-Z])/g, '_$1').toLowerCase();
@@ -29,6 +30,7 @@ export default function SignUp() {
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [errors, setErrors] = useState([]);
   const [success, setSuccess] = useState('');
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -63,6 +65,8 @@ export default function SignUp() {
         setUsername('');
         setPassword('');
         setPasswordConfirmation('');
+
+        router.push('/sign_in');
       } else {
         const data = await response.json();
         const errors = [].concat(data.errors);
