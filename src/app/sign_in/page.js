@@ -95,12 +95,10 @@ export default function SignIn() {
 
         router.push(`/${userId}/home`);
       } else {
-        const data = await response.json();
-        const errors = [].concat(data.errors);
-        setErrors(errors || ['サインアップに失敗しました。']);
+        setErrors(['サインインに失敗しました。']);
       }
     } catch (err) {
-      setErrors(['サインアップ中にエラーが発生しました。']);
+      setErrors(['サインイン中にエラーが発生しました。']);
     }
   };
 
@@ -111,7 +109,7 @@ export default function SignIn() {
         {errors.length > 0 && (
           <div className="error-messages">
             {errors.map((error, index) => (
-              <p className="text-red-500 mb-4" key={index}>{error.message}</p>
+              <p className="text-red-500 mb-4" key={index}>{error}</p>
             ))}
           </div>
         )}
