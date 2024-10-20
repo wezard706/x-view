@@ -84,9 +84,9 @@ export default function SignIn() {
       if (response.ok) {
         const snakeCaseData = await response.json();
         const data = keysToCamelCase(snakeCaseData);
-        const token = data["token"]
-        const userId = data["userId"]
-        setCookie('token', token, 7);
+        const token = data["token"];
+        const userId = data["userId"];
+        localStorage.setItem('token', token);
 
         setSuccess('サインインが成功しました！');
         setErrors([]);
