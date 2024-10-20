@@ -11,8 +11,13 @@ export default function Home({ params }) {
 
   useEffect(() => {
     const fetchUser = async () => {
+      const token = localStorage.getItem('token');
       try {
-        const response = await fetch(`http://localhost:3000/users/${id}`);
+        const response = await fetch(`http://localhost:3000/users/${id}`,{
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
         if (!response.ok) {
           throw new Error('ユーザー情報の取得に失敗しました。');
         }
