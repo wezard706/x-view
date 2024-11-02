@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 export default function Home({ params }) {
   const [user, setUser] = useState([]);
@@ -40,6 +41,11 @@ export default function Home({ params }) {
           <li>ユーザーID: {user.id}</li>
           <li>ユーザー名: {user.name}</li>
         </ul>
+      </div>
+      <div>
+        <Link href="/users">
+          ユーザー一覧を見る
+        </Link>
       </div>
     </div>
   );
