@@ -50,7 +50,7 @@ export default function SignUp() {
     const snakeCaseData = keysToSnakeCase(formData);
 
     try {
-      const response = await fetch('http://localhost:3000/sign_up', {
+      const response = await fetch('http://localhost:3000/users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

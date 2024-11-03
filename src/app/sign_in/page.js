@@ -63,7 +63,7 @@ export default function SignIn() {
     const snakeCaseData = keysToSnakeCase(formData);
 
     try {
-      const response = await fetch('http://localhost:3000/sign_in', {
+      const response = await fetch('http://localhost:3000/sessions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
