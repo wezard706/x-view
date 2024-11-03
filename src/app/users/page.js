@@ -9,19 +9,39 @@ export default function Home({ params }) {
   const [following, setFollowing] = useState({}); // 各ユーザーのフォロー状態を管理
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchData = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await fetch(`http://localhost:3000/users`, {
+        // ユーザー一覧を取得
+        const usersResponse = await fetch(`http://localhost:3000/users`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        if (!response.ok) {
+        if (!usersResponse.ok) {
           throw new Error('ユーザー情報の取得に失敗しました。');
         }
-        const data = await response.json();
-        setUsers(data);
+        const usersData = await usersResponse.json();
+        setUsers(usersData);
+
+        // ログインユーザーのフォロー中リストを取得
+        const loginUserId = localStorage.getItem('userId')
+        const followingsResponse = await fetch(`http://localhost:3000/users/${loginUserId}/followings`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!followingsResponse.ok) {
+          throw new Error('フォロー中のユーザー情報の取得に失敗しました。');
+        }
+        const followingsData = await followingsResponse.json();
+
+        // 初期のフォロー状態を設定
+        const initialFollowing = {};
+        followingsData.forEach((followedUser) => {
+          initialFollowing[followedUser.id] = true; // フォロー中のユーザーをtrueに設定
+        });
+        setFollowing(initialFollowing);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -29,7 +49,7 @@ export default function Home({ params }) {
       }
     };
 
-    fetchUsers();
+    fetchData();
   }, []);
 
   const handleFollowToggle = async (userId, isFollowing) => {
@@ -38,7 +58,7 @@ export default function Home({ params }) {
     const requestOptions = {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ followed_id: userId }),
