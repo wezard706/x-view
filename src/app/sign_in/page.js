@@ -77,6 +77,7 @@ export default function SignIn() {
         const token = data["token"];
         const userId = data["userId"];
         localStorage.setItem('token', token);
+        localStorage.setItem('userId', userId);
 
         setSuccess('サインインが成功しました！');
         setErrors([]);
