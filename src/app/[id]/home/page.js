@@ -1,11 +1,13 @@
 "use client"
 
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export default function Home({ params }) {
   const [user, setUser] = useState([]);
   const [error, setError] = useState(null);
+  const router = useRouter();
 
   // クエリパラメータ 'id' を取得
   const { id } = params;
@@ -19,6 +21,11 @@ export default function Home({ params }) {
             'Authorization': `Bearer ${token}`,
           },
         });
+        if (response.status === 401) {
+          router.push('/sign_in');
+          return;
+        }
+
         if (!response.ok) {
           throw new Error('ユーザー情報の取得に失敗しました。');
         }
