@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export default function Home({ params }) {
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState({});
   const [error, setError] = useState(null);
   const router = useRouter();
 
@@ -16,7 +16,7 @@ export default function Home({ params }) {
     const fetchUser = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await fetch(`http://localhost:3000/users/${id}`,{
+        const response = await fetch(`http://localhost:3000/users/${id}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
@@ -44,6 +44,18 @@ export default function Home({ params }) {
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
         <h1 className="text-2xl font-bold mb-6 text-center">ユーザー</h1>
         {error && <p className="text-red-500 text-center">{error}</p>}
+
+        {/* プロフィール画像を表示 */}
+        {user.profile_image_url && (
+          <div className="flex justify-center mb-6">
+            <img
+              src={user.profile_image_url}
+              alt="プロフィール画像"
+              className="w-32 h-32 rounded-full object-cover"
+            />
+          </div>
+        )}
+
         <ul>
           <li>ユーザーID: {user.id}</li>
           <li>ユーザー名: {user.name}</li>
