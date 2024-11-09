@@ -28,6 +28,7 @@ export default function SignUp() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
+  const [profileImage, setProfileImage] = useState(null); // プロフィール画像の状態
   const [errors, setErrors] = useState([]);
   const [success, setSuccess] = useState('');
   const router = useRouter();
@@ -40,22 +41,23 @@ export default function SignUp() {
       return;
     }
 
-    const formData = {
-      email,
-      username,
-      password,
-      passwordConfirmation,
-    };
-
-    const snakeCaseData = keysToSnakeCase(formData);
+    // FormDataを使用してファイルと他のデータを含める
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('username', username);
+    formData.append('password', password);
+    formData.append('password_confirmation', passwordConfirmation);
+    if (profileImage) {
+      formData.append('profile_image', profileImage); // プロフィール画像を追加
+    }
 
     try {
       const response = await fetch('http://localhost:3000/users', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          // 'Content-Type': 'application/json' は不要、FormDataは自動的に設定する
         },
-        body: JSON.stringify(snakeCaseData),
+        body: formData,
       });
 
       if (response.ok) {
@@ -65,6 +67,7 @@ export default function SignUp() {
         setUsername('');
         setPassword('');
         setPasswordConfirmation('');
+        setProfileImage(null);
 
         router.push('/sign_in');
       } else {
@@ -146,6 +149,19 @@ export default function SignUp() {
               value={passwordConfirmation}
               onChange={(e) => setPasswordConfirmation(e.target.value)}
               required
+              className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="mb-4">
+            <label htmlFor="profileImage" className="block text-gray-700 font-bold mb-2">
+              プロフィール画像:
+            </label>
+            <input
+              type="file"
+              id="profileImage"
+              name="profileImage"
+              onChange={(e) => setProfileImage(e.target.files[0])}
               className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
